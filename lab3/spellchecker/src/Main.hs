@@ -1,4 +1,4 @@
--- | NO TOCAR NADA ACA!!!!!
+-- NO TOCAR NADA ACA!!!!!
 
 module Main(main) where
 

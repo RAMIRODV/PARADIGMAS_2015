@@ -1,92 +1,96 @@
--- |
-module Dictionary where
+module Dictionary (Dictionary,
+                   dict_new,
+                   dict_add,
+                   dict_contains,
+                   dict_load,
+                   dict_save
+        )
+where
+
+import IO
+import Data.Char
+import Data.Bool
+import Hugs.IOExts (unsafePerformIO)
 
 type Word = String
-data Dictionary = Palabra Word (Dictionary) | Empty deriving Show
 
--- | Crea un nuevo diccionario vacio
+-- Estructura del diccionario
+data Dictionary = Dictionary Int [Word] deriving Show
+
+-- Crea un nuevo diccionario vacio
 dict_new :: Dictionary
-dict_empty = Empty
+dict_new = Dictionary 0 []
 
--- | Agrega una palabra al diccionario especificado
+-- Agrega una palabra al diccionario especificado
 dict_add :: Word -> Dictionary -> Dictionary
-dict_add w Empty = Palabra w Empty
-dict_add w (Palabra a d) = Palabra w (dict_add a d)
+dict_add w (Dictionary n xs) = Dictionary (n+1) (w:xs)
 
--- | Verifica la existencia de una palabra en el
--- diccionario especificado
+-- Verifica la existencia de una palabra en el diccionario especificado
 dict_contains :: Word -> Dictionary -> Bool
-dict_contains w Empty = False
-dict_contains w (Palabra a d)   | (w == a) = True
-                                | otherwise = dict_contains w d
+dict_contains w (Dictionary n []) = False
+dict_contains w (Dictionary n (x:xs)) |w==x = True
+                                      |otherwise = dict_contains w (Dictionary n xs)
 
--- | Carga un diccionario desde un archivo especificado.
+-- Carga un diccionario desde un archivo especificado
 dict_load :: FilePath -> IO Dictionary
-dict_load f =
+dict_load fname =
     let
-        file2String :: FilePath -> IO String
-        file2String f =
-            do  handle <- openFile f ReadMode
-                hGetContents handle -- no carga todo en memoria,
-                                    -- es lazy,
-                                    -- el archivo se cierra solo,
+        file2String :: FilePath -> IO String    -- Carga el Diccionario principal
+        file2String fname =
+            do handle <- openFile fname ReadMode
+               hGetContents handle
 
-    {-
-        Lleva a una lista de strings un string separando por el predicado
-        Ej: Si el predicado es (/='\n') y el string
-        "Hola\ncomo\n\nestas\n"
-        ->
-        ["Hola", "como", "", "estas", ""]
-    -}
-        subsecs :: (a -> Bool) -> [a] -> [[a]]
-        subsecs p = foldr f [[]]
-            where
-                f x (ps:pss) | p x       = (x:ps):pss
-                             | not (p x) = []:ps:pss
+        alpha_char :: [String] -> Bool    -- La palabra posse caracteres especiales
+        alpha_char [] = True
+        alpha_char [[]] = True
+        alpha_char ([]:xss) = alpha_char xss
+        alpha_char ((x:xs):xss) |(isAlpha x) == False = False
+                                |otherwise = alpha_char (xs:xss)
 
-    {-  
-        Limpio los "" de la lista de strings
-        ["Hola", "como", "", "estas", ""]
-        ->
-        ["Hola", "como", "estas"]
-    -}
-        lineas :: String -> [String]
-        lineas str = filter (/=[]) (subsecs (/='\n') str)
+        max_word :: [Word] -> Bool    -- La palabra no cumple con el maximo permitido
+        max_word [] = True
+        max_word (x:xs) |(length x) > 30 = False
+                        |otherwise  = max_word xs
 
-    {-
-        Hace el proceso de un string a un diccionaio.
-        Ej:
-        "Hola\ncomo\n\nestas\n"
-        ->
-        Palabra "estas" (Palabra "como" (Palabra "Hola"))
-    -}
-        dictFromString :: String -> Dictionary
-        dictFromString str = 
-            foldr f dict_empty (lineas str)
+        subsecs :: Ord a => (a -> Bool) -> [a] -> [[a]]    -- Sub-secuencias
+        subsecs f [] = [[]]
+        subsecs f (x:xs) |f x = (x:ps):pss
+                         |otherwise = []:ps:pss
                 where
-                    f k di = dict_add k di
-    in
-        do
-            str <- file2String f
-            return (dictFromString str)
+                   ps:pss = subsecs f xs
 
--- | Guarda el diccionario en el archivo especificado.
+        lines :: String -> [Word]    -- Lista las lineas del diccionario
+        lines (x:xs) = subsecs (/='\n') (x:xs)
+
+        dictFromString :: [Word] -> Dict
+        dictFromString list = 
+            foldr f dict_new list
+                where
+                  f w dict = dict_add w dict
+
+    in
+      do
+        list <- lines (file2String fname)
+        isOK <- ((max_word list) && (alpha_char list))
+        if isOK 
+        then return (dictFromString list)
+        else return (Dictionary (-1) [])
+
+-- Guarda el diccionario en el archivo especificado.
 dict_save :: FilePath -> Dictionary -> IO ()
-dict_save f d =
+dict_save fname (Dictionary n xs) =
     let
         intercal :: a -> [[a]] -> [a]
         intercal x [] = []
         intercal x [ys] = ys
         intercal x (ys:yss) = ys ++ (x: intercal x yss)
-      
-        LsWToString :: [Word] -> String
-        LsWToString ls = intercal '\n' ls
+  
+        defsToString :: [Word] -> String
+        defsToString list = intercal '\n' list
 
-        dict_toLsW :: Diccionario -> [Word]
-        dict_toLsW Empty = []
-        dict_toLsW (Palabra w d) = w : (dict_toLsW d)
     in
-        do
-            handle <- openFile f WriteMode
-            hPutStr handle (LsWToString (dict_toLsW d))
-            hClose handle
+      do
+        handle <- openFile fname WriteMode
+        hPutStr handle (defsToString xs)
+        hClose handle
+        return ()
