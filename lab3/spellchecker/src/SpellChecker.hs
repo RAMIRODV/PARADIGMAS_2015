@@ -37,6 +37,53 @@ process_document (Document docIn docOut) (Dictionary n xs) (Dictionary i ys) =
 -- realizar con la misma. Las acciones pueden ser aceptar, ignorar
 -- o reemplazar.
 consult_user ::  Word -> Dictionary -> Dictionary -> IO (Word, Dictionary, Dictionary)
-consult_user word (Dictionary n xs) (Dictionary i ys) =
-                do
-                    
+consult_user word dicPrincipal dicIgnorados =
+    let
+        {------------------------------------------------------------------
+            Funcion: Verifica si la palabra existe ya sea en el diccionario
+            del usuario o en el diccionario de palabras ignoradas.
+
+            Input: Word, Dictionary
+            return: Bool
+        ------------------------------------------------------------------}
+        existe w dic dicIgn = do
+            a <- dic_contains w dic
+            b <- dic_contains w dicIgn
+            return (a || b)
+
+        {------------------------------------------------------------------
+            Funcion: Reemplaza la palabra y devuelve la palabra reemplazada
+
+            Input: Word
+            return: Word
+        ------------------------------------------------------------------}
+        reemplazar w = do
+            putStr "Reemplazar por: "
+            r <- getLine
+            return r
+        
+        -- Interaccion con el usuario
+        preguntar = do
+            putStr "\nLa palabra no existe que desea hacer? (a=aceptar, i=ignorar, r=reemplazar)"
+            c <- getChar
+            if c == 'a' || c == 'A'
+                then do return (toLower c)
+                else if  c == 'i' || c == 'I'
+                    then do return (toLower c)
+                    else if c == 'r' || c == 'R'
+                        then do return (toLower c)
+                        else preguntar
+    in
+        do
+            e <- existe word dicPrincipal dicIgnorados
+            if not e then do
+                opc <- preguntar
+                if opc == 'a'
+                    then do dicMod <- dodict_add word dicPrincipal
+                            return (word, dicMod, dicIgnorados)
+                    else if opc == 'i'
+                        then do dicMod <- dict_add word dicIgnorados
+                            return (word, dicPrincipal, dicMod)
+                        else if opc == 'r'
+                            then do palabra <- reemplazar word
+                                    consult_user palabra dicPrincipal dicIgnorados
