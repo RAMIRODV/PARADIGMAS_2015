@@ -5,18 +5,20 @@ module Document (Document,
                  doc_close,
                  doc_get_word,
                  doc_put_word,
-        ) 
+        )
 where
 
-import IO
+import System.IO
 import Data.Char
 import Data.Bool
 import Hugs.IOExts (unsafePerformIO)
 
 type Word = String
+type DocIN = Handle
+type DocOut = Handle
 
 -- Estructura del documento
-data Document = Document Handle Handle deriving Show
+data Document = Document DocIN DocOut deriving Show
 
 -- Abre los archivos especificados por los paths
 -- pasados como argumentos. El primer path repre-
@@ -34,7 +36,6 @@ doc_close :: Document -> IO ()
 doc_close (Document docIn docOut) = do
                 hClose docIn
                 hClose docOut
-                return ()
 
 -- Obtiene una palabra del documento especificado,
 -- copiando todos los caracteres no alfabeticos
@@ -44,8 +45,23 @@ doc_close (Document docIn docOut) = do
 doc_get_word :: Document -> IO Word
 doc_get_word (Document docIn docOut) =
     let
-    -- hgetchar
-    -- hseek
+        a :: Word -> Document -> IO Word
+        a word (Document docIn docOut) = do
+                isEOF <- hIsEOF docIn
+                if isEOF then return(word)
+                else do character <- hGetChar docIn
+                        if isAlpha(character)
+                            then if a (word++[character]) (Document docIn docOut)
+                            else if (length word) == 0
+                                    then do hPutChar docOut character
+                                            a word (Document docIn docOut)
+                                    else do hSeek docIn RelativeSeek (-1)
+                                            return(word)
+
+    in
+        do
+            q <- (a "" (Document docIn docOut))
+            return(q)                                   -- excepcion VER!!!
 
 -- Escribe una palabra en el documento de salida.
 doc_put_word :: Word -> Document -> IO ()
