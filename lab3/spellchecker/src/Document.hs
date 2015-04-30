@@ -11,7 +11,6 @@ where
 import System.IO
 import Data.Char
 import Data.Bool
-import Hugs.IOExts (unsafePerformIO)
 
 type Word = String
 type DocIN = Handle
@@ -51,7 +50,7 @@ doc_get_word (Document docIn docOut) =
                 if isEOF then return(word)
                 else do character <- hGetChar docIn
                         if isAlpha(character)
-                            then if a (word++[character]) (Document docIn docOut)
+                            then do a (word++[character]) (Document docIn docOut)
                             else if (length word) == 0
                                     then do hPutChar docOut character
                                             a word (Document docIn docOut)
@@ -61,7 +60,7 @@ doc_get_word (Document docIn docOut) =
     in
         do
             q <- (a "" (Document docIn docOut))
-            return(q)                                   -- excepcion VER!!!
+            return(q)
 
 -- Escribe una palabra en el documento de salida.
 doc_put_word :: Word -> Document -> IO ()

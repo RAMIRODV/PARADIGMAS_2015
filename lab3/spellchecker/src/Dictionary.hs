@@ -8,11 +8,9 @@ module Dictionary (Dictionary,
                    dict_save
         )
 where
-
-import IO
+import System.IO
 import Data.Char
 import Data.Bool
-import Hugs.IOExts (unsafePerformIO)
 
 type Word = String
 
@@ -38,9 +36,9 @@ dict_load :: FilePath -> IO Dictionary
 dict_load fname =
     let
         file2String :: FilePath -> IO String    -- Carga el Diccionario principal
-        file2String fname =
-            do handle <- openFile fname ReadMode
-               hGetContents handle
+        file2String fname = do
+                handle <- openFile fname ReadMode
+                hGetContents handle
 
         alpha_char :: [String] -> Bool    -- La palabra posse caracteres especiales
         alpha_char [] = True
@@ -59,24 +57,25 @@ dict_load fname =
         subsecs f (x:xs) |f x = (x:ps):pss
                          |otherwise = []:ps:pss
                 where
-                   ps:pss = subsecs f xs
+                    ps:pss = subsecs f xs
 
         lines :: String -> [Word]    -- Lista las lineas del diccionario
         lines (x:xs) = subsecs (/='\n') (x:xs)
 
-        dictFromString :: [Word] -> Dict
+        dictFromString :: [Word] -> Dictionary
         dictFromString list = 
             foldr f dict_new list
                 where
-                  f w dict = dict_add w dict
+                    f w dict = dict_add w dict
 
     in
-      do
-        list <- lines (file2String fname)
-        isOK <- ((max_word list) && (alpha_char list))
-        if isOK 
-        then return (dictFromString list)
-        else return (Dictionary (-1) [])
+        do
+            str <- file2String fname            
+            return(dictFromString (lines str))
+            {-isOK <- ((max_word list) && (alpha_char list))
+            if isOK 
+            then return (dictFromString list)
+            else return (Dictionary (-1) [])-}
 
 -- Guarda el diccionario en el archivo especificado.
 dict_save :: FilePath -> Dictionary -> IO ()
@@ -91,7 +90,7 @@ dict_save fname (Dictionary n xs) =
         defsToString list = intercal '\n' list
 
     in
-      do
-        handle <- openFile fname WriteMode
-        hPutStr handle (defsToString xs)
-        hClose handle
+        do
+            handle <- openFile fname WriteMode
+            hPutStr handle (defsToString xs)
+            hClose handle
