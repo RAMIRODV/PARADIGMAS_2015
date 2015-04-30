@@ -1,3 +1,5 @@
+{-# LANGUAGE DoAndIfThenElse #-}
+
 module Dictionary (Dictionary,
                    dict_new,
                    dict_add,
@@ -93,4 +95,3 @@ dict_save fname (Dictionary n xs) =
         handle <- openFile fname WriteMode
         hPutStr handle (defsToString xs)
         hClose handle
-        return ()
