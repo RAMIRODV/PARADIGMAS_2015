@@ -6,6 +6,7 @@ import CommandLine
 import Dictionary
 import Document
 import System.IO.Error
+import Control.Exception
 
 type Word = String
 

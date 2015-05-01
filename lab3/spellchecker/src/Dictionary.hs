@@ -22,7 +22,7 @@ dict_new = Dictionary []
 
 -- Agrega una palabra al diccionario especificado
 dict_add :: Word -> Dictionary -> Dictionary
-dict_add w (Dictionary xs) = Dictionary (xs ++ [w])
+dict_add w (Dictionary xs) = Dictionary ([w] ++ xs)
 
 -- Verifica la existencia de una palabra en el diccionario especificado
 dict_contains :: Word -> Dictionary -> Bool
