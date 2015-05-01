@@ -5,7 +5,10 @@ module SpellChecker (do_spellcheck) where
 import CommandLine
 import Dictionary
 import Document
-import Control.Exception
+--import Control.Exception
+import System.IO
+
+type Word = String
 
 -- La funcion 'do_spellcheck' es la funcion que se encarga de manejar
 -- el proceso de chequeo ortografico. Esto incluye, cargar el diccionario,
@@ -13,14 +16,15 @@ import Control.Exception
 -- diccionario y el archivo de entrada ya procesado.
 -- Toma como argumento los argumentos de linea de comando de tipo 'Params'.
 do_spellcheck :: Params -> IO ()
-do_spellcheck (Params filename dictionary) = do
-                dict <- dict_load dictionary
-                doc <- doc_open filename "out.txt"
-                dictToSave <- process_document doc dict dict_new
-                dict_save filename dictToSave
-                doc_close doc
-                return()
-        
+do_spellcheck (Params filename dictionary) =
+    do
+        dict <- dict_load dictionary
+        doc <- doc_open filename "out.txt"
+        dictToSave <- (process_document doc dict dict_new)
+        dict_save filename dictToSave
+        doc_close doc
+        return()
+
 -- La funcion 'process_document' ejecuta el proceso de chequeo ortografico.
 -- Para ello, procesa el archivo palabra por palabra, copiandolas al archivo
 -- de salida y consultando al usuario sobre que accion realizar ante una
@@ -30,18 +34,27 @@ do_spellcheck (Params filename dictionary) = do
 -- haber sido modificado) para guardarlo.
 process_document :: Document -> Dictionary -> Dictionary -> IO Dictionary
 process_document document dictMain dictIgnored =
-                do
-                catch(
-                    currentWord <- doc_get_word document
-                    if ((dict_contains currentWord dictMain) && (dict_contains currentWord dictMain))
-                        then do doc_put_word word document
-                                process_document document dictMain dictIgnored
-                        else do (word,dictMain,dictIgnored) <- consult_user currentWord dictMain dictIgnored
-                                doc_put_word word document
-                                process_document document dictMain dictIgnored) handlerException
-                where
-                    handlerException :: SomeException -> IO ()
-                    handlerException _ = return(dictMain)
+    do
+    --catch (
+        do
+            currentWord <- (doc_get_word document)
+            inMain <- (dict_contains currentWord dictMain)
+            inIgnored <- (dict_contains currentWord dictIgnored)
+            if (inMain || inIgnored)
+                then do doc_put_word currentWord document
+                        dictMain <- (process_document document dictMain dictIgnored)
+                        return(dictMain)
+                else do (word, dictMain, dictIgnored) <- (consult_user currentWord dictMain dictIgnored)
+                        doc_put_word currentWord document
+                        dictMain <- (process_document document dictMain dictIgnored)
+                        return(dictMain)
+            --) handleException
+        --where
+            --handleException :: SomeException -> IO ()
+            --handleException _   = do
+                                    --return(dictMain)
+        `catch`
+        \e -> if isEOFError e then return(dicMain)
 
 -- Verifica si una palabra es conocida, en cuyo caso, continua
 -- con el procesamiento del archivo, sin realizar ninguna accion.
@@ -49,53 +62,29 @@ process_document document dictMain dictIgnored =
 -- realizar con la misma. Las acciones pueden ser aceptar, ignorar
 -- o reemplazar.
 consult_user ::  Word -> Dictionary -> Dictionary -> IO (Word, Dictionary, Dictionary)
-consult_user word dicPrincipal dicIgnorados =
+consult_user word dicMain dicIgnored =
     let
-        {------------------------------------------------------------------
-            Funcion: Verifica si la palabra existe ya sea en el diccionario
-            del usuario o en el diccionario de palabras ignoradas.
-
-            Input: Word, Dictionary
-            return: Bool
-        ------------------------------------------------------------------}
-        existe w dic dicIgn = do
-            a <- dic_contains w dic
-            b <- dic_contains w dicIgn
-            return (a || b)
-
-        {------------------------------------------------------------------
-            Funcion: Reemplaza la palabra y devuelve la palabra reemplazada
-
-            Input: Word
-            return: Word
-        ------------------------------------------------------------------}
+        reemplazar :: Word -> Word
         reemplazar w = do
             putStr "Reemplazar por: "
             r <- getLine
-            return r
-        
-        -- Interaccion con el usuario
+            return(r)
+
+        preguntar :: Char
         preguntar = do
             putStr "\nLa palabra no existe que desea hacer? (a=aceptar, i=ignorar, r=reemplazar)"
             c <- getChar
-            if c == 'a' || c == 'A'
-                then do return (toLower c)
-                else if  c == 'i' || c == 'I'
-                    then do return (toLower c)
-                    else if c == 'r' || c == 'R'
-                        then do return (toLower c)
-                        else preguntar
+            case c of
+                'a' -> return(c)
+                'i' -> return(c)
+                'r' -> return(c)
+                _   -> preguntar
+
     in
         do
-            e <- existe word dicPrincipal dicIgnorados
-            if not e then do
-                opc <- preguntar
-                if opc == 'a'
-                    then do dicMod <- dodict_add word dicPrincipal
-                            return (word, dicMod, dicIgnorados)
-                    else if opc == 'i'
-                        then do dicMod <- dict_add word dicIgnorados
-                            return (word, dicPrincipal, dicMod)
-                        else if opc == 'r'
-                            then do palabra <- reemplazar word
-                                    consult_user palabra dicPrincipal dicIgnorados
+            option <- preguntar
+            case option of
+                'a' -> return(word, dict_add word dicMain, dicIgnored)
+                'i' -> return(word, dicMain, dict_add word dicIgnored)
+                'r' -> do newWord <- reemplazar word
+                          return(newWord, dicMain, dicIgnored)

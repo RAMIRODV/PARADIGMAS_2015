@@ -8,6 +8,7 @@ module Dictionary (Dictionary,
                    dict_save
         )
 where
+
 import System.IO
 import Data.Char
 import Data.Bool

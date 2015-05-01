@@ -10,7 +10,6 @@ where
 
 import System.IO
 import Data.Char
-import Data.Bool
 
 type Word = String
 type DocIN = Handle
@@ -42,24 +41,22 @@ doc_close (Document docIn docOut) = do
 -- Cuando alcanza el final del documento, lo señaliza
 -- con una excepcion.
 doc_get_word :: Document -> IO Word
-doc_get_word (Document docIn docOut) =
+doc_get_word document =
     let
         a :: Word -> Document -> IO Word
         a word (Document docIn docOut) = do
-                isEOF <- hIsEOF docIn
-                if isEOF then return(word)
-                else do character <- hGetChar docIn
-                        if isAlpha(character)
-                            then do a (word++[character]) (Document docIn docOut)
-                            else if (length word) == 0
-                                    then do hPutChar docOut character
-                                            a word (Document docIn docOut)
-                                    else do hSeek docIn RelativeSeek (-1)
-                                            return(word)
+                character <- hGetChar docIn
+                if isAlpha(character)
+                    then do a (word++[character]) (Document docIn docOut)
+                    else if (length word) == 0
+                            then do hPutChar docOut character
+                                    a word (Document docIn docOut)
+                            else do hSeek docIn RelativeSeek (-1)
+                                    return(word)
 
     in
         do
-            q <- (a "" (Document docIn docOut))
+            q <- (a "" document)
             return(q)
 
 -- Escribe una palabra en el documento de salida.
