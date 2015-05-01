@@ -43,21 +43,21 @@ doc_close (Document docIn docOut) = do
 doc_get_word :: Document -> IO Word
 doc_get_word document =
     let
-        a :: Word -> Document -> IO Word
-        a word (Document docIn docOut) = do
+        extract :: Word -> Document -> IO Word
+        extract word (Document docIn docOut) = do
                 character <- hGetChar docIn
                 if isAlpha(character)
-                    then do a (word++[character]) (Document docIn docOut)
+                    then do extract (word++[character]) (Document docIn docOut)
                     else if (length word) == 0
                             then do hPutChar docOut character
-                                    a word (Document docIn docOut)
+                                    extract word (Document docIn docOut)
                             else do hSeek docIn RelativeSeek (-1)
                                     return(word)
 
     in
         do
-            q <- (a "" document)
-            return(q)
+            currentWord <- (extract "" document)
+            return(currentWord)
 
 -- Escribe una palabra en el documento de salida.
 doc_put_word :: Word -> Document -> IO ()

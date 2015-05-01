@@ -5,8 +5,7 @@ module SpellChecker (do_spellcheck) where
 import CommandLine
 import Dictionary
 import Document
---import Control.Exception
-import System.IO
+import System.IO.Error
 
 type Word = String
 
@@ -16,13 +15,16 @@ type Word = String
 -- diccionario y el archivo de entrada ya procesado.
 -- Toma como argumento los argumentos de linea de comando de tipo 'Params'.
 do_spellcheck :: Params -> IO ()
-do_spellcheck (Params filename dictionary) =
+do_spellcheck (Params filenameIn dictionaryMain) =
     do
-        dict <- dict_load dictionary
-        doc <- doc_open filename "out.txt"
+        dict <- dict_load dictionaryMain
+        doc <- doc_open filenameIn "out.txt"
         dictToSave <- (process_document doc dict dict_new)
-        dict_save filename dictToSave
+        dict_save dictionaryMain dictToSave
         doc_close doc
+        putStr "El documento "
+        putStr filenameIn
+        putStr " ha sido procesado. Resultados en out.txt\n"
         return()
 
 -- La funcion 'process_document' ejecuta el proceso de chequeo ortografico.
@@ -34,27 +36,19 @@ do_spellcheck (Params filename dictionary) =
 -- haber sido modificado) para guardarlo.
 process_document :: Document -> Dictionary -> Dictionary -> IO Dictionary
 process_document document dictMain dictIgnored =
-    do
-    --catch (
         do
             currentWord <- (doc_get_word document)
-            inMain <- (dict_contains currentWord dictMain)
-            inIgnored <- (dict_contains currentWord dictIgnored)
-            if (inMain || inIgnored)
+            if ((dict_contains currentWord dictMain) || (dict_contains currentWord dictIgnored))
                 then do doc_put_word currentWord document
-                        dictMain <- (process_document document dictMain dictIgnored)
-                        return(dictMain)
-                else do (word, dictMain, dictIgnored) <- (consult_user currentWord dictMain dictIgnored)
-                        doc_put_word currentWord document
-                        dictMain <- (process_document document dictMain dictIgnored)
-                        return(dictMain)
-            --) handleException
-        --where
-            --handleException :: SomeException -> IO ()
-            --handleException _   = do
-                                    --return(dictMain)
+                        dictMain' <- (process_document document dictMain dictIgnored)
+                        return(dictMain')
+                else do (word, dictMainM, dictIgnoredM) <- (consult_user currentWord dictMain dictIgnored)
+                        doc_put_word word document
+                        dictMain' <- (process_document document dictMainM dictIgnoredM)
+                        return(dictMain')
         `catch`
-        \e -> if isEOFError e then return(dicMain)
+        \e -> if isEOFError e then return(dictMain)
+                else ioError e
 
 -- Verifica si una palabra es conocida, en cuyo caso, continua
 -- con el procesamiento del archivo, sin realizar ninguna accion.
@@ -62,29 +56,35 @@ process_document document dictMain dictIgnored =
 -- realizar con la misma. Las acciones pueden ser aceptar, ignorar
 -- o reemplazar.
 consult_user ::  Word -> Dictionary -> Dictionary -> IO (Word, Dictionary, Dictionary)
-consult_user word dicMain dicIgnored =
+consult_user wordUnknown dicMain dicIgnored =
     let
-        reemplazar :: Word -> Word
-        reemplazar w = do
-            putStr "Reemplazar por: "
-            r <- getLine
-            return(r)
+        replace :: IO Word
+        replace = do
+            putStrLn "Ingrese una nueva palabra: "
+            newWord <- getLine
+            return(newWord)
 
-        preguntar :: Char
-        preguntar = do
-            putStr "\nLa palabra no existe que desea hacer? (a=aceptar, i=ignorar, r=reemplazar)"
+        ask :: Word -> IO Char
+        ask word = do
+            putStr "Palabra no reconocida: " 
+            putStr word
+            putChar '\n'
+            putStrLn "Aceptar (a) - Ignorar (i) - Reemplazar (r): "
             c <- getChar
+            putChar '\n'
+            _ <- getLine
             case c of
                 'a' -> return(c)
                 'i' -> return(c)
                 'r' -> return(c)
-                _   -> preguntar
+                _   -> ask word
 
     in
         do
-            option <- preguntar
+            option <- ask wordUnknown
             case option of
-                'a' -> return(word, dict_add word dicMain, dicIgnored)
-                'i' -> return(word, dicMain, dict_add word dicIgnored)
-                'r' -> do newWord <- reemplazar word
+                'a' -> return(wordUnknown, dict_add wordUnknown dicMain, dicIgnored)
+                'i' -> return(wordUnknown, dicMain, dict_add wordUnknown dicIgnored)
+                'r' -> do newWord <- replace
                           return(newWord, dicMain, dicIgnored)
+                _   -> consult_user wordUnknown dicMain dicIgnored
