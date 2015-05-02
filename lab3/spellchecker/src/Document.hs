@@ -43,15 +43,15 @@ doc_close (Document docIn docOut) = do
 doc_get_word :: Document -> IO Word
 doc_get_word document =
     let
-        extract :: Word -> Document -> IO Word
+        extract :: Word -> Document -> IO Word    -- Extrae cada palabra del documento.
         extract word (Document docIn docOut) = do
-                character <- hGetChar docIn
-                if isAlpha(character)
-                    then do extract (word++[character]) (Document docIn docOut)
-                    else if (length word) == 0
-                            then do hPutChar docOut character
-                                    extract word (Document docIn docOut)
-                            else do hSeek docIn RelativeSeek (-1)
+                character <- hGetChar docIn    -- Toma un caracter.
+                if isAlpha(character)    -- Es alfabetico.
+                    then do extract (word++[character]) (Document docIn docOut)    -- Sigue extrayendo caracteres.
+                    else if (length word) == 0    -- Caracteres no alfabeticos precedentes.
+                            then do hPutChar docOut character    -- Copia al documento de salida.
+                                    extract word (Document docIn docOut)    -- Sigue extrayendo caracteres.
+                            else do hSeek docIn RelativeSeek (-1)    -- Se apunta al caracter no alfabetico para guardarlo despues.
                                     return(word)
 
     in
