@@ -1,10 +1,12 @@
+$x="estatico"
+
 def g()
-    x = "estatico"
-    return x
+    puts $x
 end
 
-x = "dinamico"
-print x , "\n"
+def f()
+    $x = "dinamico"
+    g()
+end
 
-print g() , "\n"
-print x , "\n"
+f()

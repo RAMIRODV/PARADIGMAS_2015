@@ -1,14 +1,11 @@
 <script type="text/javascript">
-    function g(){
-        var x = "estatico";
-        return x;
-    };
-
+var x = "estatico";
+function g() {
+    alert("JavaScript es: " + x);
+}
+function f() {
     var x = "dinamico";
-    document.write("x: ", x, "<br>");
-
-    var r = g();        
-    document.write("x: ", r, "<br>");
-    
-    document.write("x: ", x, "<br>");
+    g();
+}
+f();
 </script>

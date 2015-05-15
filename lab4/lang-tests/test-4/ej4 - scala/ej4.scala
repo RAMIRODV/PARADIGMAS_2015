@@ -1,11 +1,12 @@
-object ej4 {
-    def g (): String = {
-        var x = "estatico"
-        x
+object Main extends App {
+    var x = "estatico"
+    def g() = {
+        println(s"Escala es de alcance: $x")
     }
-    var x = "dinamico"
-    println(x)
-    var r = g()
-    println(r)
-    println(x)
+    
+    def f() = {
+        var x = "dinamico"
+        g()
+    }
+    f()
 }
