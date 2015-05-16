@@ -1,14 +1,21 @@
 import System.IO
 
-x = "dinamico"
+x = 1
 
 main =
-    do
-        putStrLn x
-        putStrLn (g x)
-        putStrLn x
+	do
+		result <- f 3
+		print(result)
+		
 
-                
-g :: String -> String
-g x = "estatico"
-            
+g :: Integer -> IO Integer
+g z = 
+	do
+		let result = z + x
+		return result
+
+f :: Integer -> IO Integer
+f y = 
+	do
+		let x = y + 1
+		g (x * y)
