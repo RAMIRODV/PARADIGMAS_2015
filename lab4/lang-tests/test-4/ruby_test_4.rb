@@ -1,9 +1,9 @@
-x = lambda {"estatico"}
+$x = "estatico"
 def g()
-    return print x , "\n"
+    return print $x , "\n"
 end
 def f()
-    x = "dinamico"
+    $x = "dinamico"
     return g()
 end
 f()

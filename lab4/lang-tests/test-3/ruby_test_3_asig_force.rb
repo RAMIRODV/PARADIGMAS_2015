@@ -1,2 +1,6 @@
-SOME_X = 1
-SOME_X = 2
+def asig_force()
+    SOME_CONSTANT = 1
+    SOME_CONSTANT = 0
+end
+
+asig_force()

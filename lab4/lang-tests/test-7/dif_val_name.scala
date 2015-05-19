@@ -5,12 +5,11 @@ object Main extends App {
     mostrar(prod(y))
     println("call-by-value usando lazy")
     mostrar(x)
-    println("Vuevlo a llamar a ambos")
+    println("Vuelvo a llamar a ambos")
     mostrar(prod(y))
     mostrar(x)
     
-    def prod(a: =>Int) = { System.nanoTime
-        }
+    def prod(a: =>Int) = { System.nanoTime }
     
     def mostrar(t: =>Long) = { println("Parametro: " + t) }
 }

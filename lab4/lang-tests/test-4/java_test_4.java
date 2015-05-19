@@ -1,13 +1,15 @@
-public class ej4 {
-    static void g(){
+class java_test_4 {
+    String x = "estatico";
+    void g(){
         System.out.println(x);
     }
-    static void f(){
+    void f(){
         String x = "dinamico";
         g();
     }
     public static void main (String[] args){
         String x = "estatico";
-        f();
+        java_test_4 a = new java_test_4();
+        a.f();
     }
 }

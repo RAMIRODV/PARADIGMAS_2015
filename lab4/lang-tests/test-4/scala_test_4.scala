@@ -1,7 +1,7 @@
 object Main extends App {
     var x = "estatico"
     def g() = {
-        println(s"Escala es de alcance: $x")
+        println(s"Scala es de alcance: $x")
     }
     
     def f() = {
