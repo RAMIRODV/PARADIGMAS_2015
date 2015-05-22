@@ -32,10 +32,15 @@
 %token <v> TK_PROP
 %token TK_BEGIN
 %token TK_END
+%token TK_OR
+%token TK_AND
 
  /* Define el tipo de datos que retorna la bnf*/
 %type <a> formula input
 
+%left TK_OR
+%left TK_AND
+%nonassoc 'v' '&'
 
 %%
 /* Simbolo inicial */
@@ -43,6 +48,15 @@ input: TK_BEGIN formula TK_END {ast = $2;};
 
 /* COMPLETAR ACA */
 formula: TK_PROP                 {ASTNODE_PROP(n,$1); $$ =n ;} ;
+         |formula TK_OR formula
+         |formula TK_AND formula
+         |TK_OR TK_OR formula {printf ("Error Sintactico )\n");}
+         |formula TK_OR TK_OR {printf ("Error Sintactico )\n");}
+         |TK_OR TK_OR TK_OR {printf ("Error Sintactico )\n");}
+         |TK_AND TK_AND formula {printf ("Error Sintactico )\n");}
+         |formula TK_AND TK_AND {printf ("Error Sintactico )\n");}
+         |TK_AND TK_AND TK_AND {printf ("Error Sintactico )\n");}
+         ;
 
 %%
 

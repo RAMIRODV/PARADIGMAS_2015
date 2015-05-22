@@ -25,7 +25,7 @@ extern char* fname;
 %}
 
 
-NUMBER    [0-9]*
+NUMBER              [0-9]*
 
 /* Seccion de Patrones y Acciones:: En esta seccion se listan */
 /* los patrones que debe identificar el lexer y las acciones a ejecutar*/
@@ -37,9 +37,13 @@ NUMBER    [0-9]*
 /* * la linea (sin espacios antes), ya que flex considera cada linea que  */
 /* * empieza con espacio como una linea de codigo valida. *\/ */
 %%
-"begin"                       {return TK_BEGIN ;}
-"end"                         {return TK_END ;}
-p{NUMBER}                     {f_lval.v = get_prop_var(f_text); return TK_PROP ;}
+
+[ \t\n]+                      {/* NONE */}
+begin|BEGIN                   {return TK_BEGIN ;}
+end|END                       {return TK_END ;}
+(p|P)[NUMBER^0]?{NUMBER}      {f_lval.v = get_prop_var(f_text); return TK_PROP ;}
+"v"                           {return TK_OR ;}
+"&"                           {return TK_AND ;}
 .                             { log_error(" %s - lexer error - at line %d: %s\n",fname,f_lineno,f_text); }      
 
 %%
