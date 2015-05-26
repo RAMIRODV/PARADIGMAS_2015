@@ -3,18 +3,37 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class FileDictionary extends Dictionary {
+	/**
+	 * Esta classe representa un diccionario que se carga desde un archivo de
+	 * texto. Es una subclase de Dictionary.
+	 * @version 0.1
+	 * @author Fernando Copa.
+	 * @author Ramiro Della Vedova.
+	 */
+	
     private String loadPath;
 
-    // Constructor con path por defecto.
+    /**
+     * Constructor por defecto.
+     * El path por defecto es el directorio actual y el nombre del archivo es
+     * dict.txt.
+     */
     public FileDictionary() {
-        this.loadPath = "";  // Ruta del dict.txt por defecto.
+        this.loadPath = "";
     }
 
-    // Constructor con path en un String.
+    /**
+     * Constructor de la clase con la ruta del archivo especifico.
+     * @param s Path del archivo especificado por el usuario.
+     */
     public FileDictionary(String s) {
         this.loadPath = s;
     }
 
+    /**
+     * Este metodo carga un diccionario desde un archivo.
+     * @param file Nombre del archivo diccionario.
+     */
     public void load(String file) {
         try {
             FileReader fr = new FileReader(file);
@@ -45,6 +64,10 @@ public class FileDictionary extends Dictionary {
         }
     }
 
+    /**
+     * Este metodo guarda el diccionario a un archivo por defecto llamado
+     * dict.txt.
+     */
     public void save() {
         int tam;
         PrintWriter f = new PrintWriter(this.loadPath);
@@ -59,6 +82,10 @@ public class FileDictionary extends Dictionary {
         f.close();
     }
 
+    /**
+     * Este metodo guarda un diccionario a un archivo especifico.
+     * @param fileName Nombre de archivo con el que se guardara el diccionario.
+     */
     public void save(String fileName) {
         int tam;
         PrintWriter f = new PrintWriter(fileName);
