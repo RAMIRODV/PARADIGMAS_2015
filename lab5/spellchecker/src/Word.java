@@ -3,7 +3,7 @@ public class Word {
     
     // Constructor Word sin parametros.
     public Word() {
-        word = "";
+        this.word = "";
     }
     
     // Constructor Word con parametro String.
@@ -23,11 +23,11 @@ public class Word {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof(Word)) {
+        if (!(obj instanceof Word)) {
             return false;
         }
         Word other = (Word) obj;
-        return word.equals(obj.getWord());
+        return word.equals(other.getWord());
     }
 
     @Override

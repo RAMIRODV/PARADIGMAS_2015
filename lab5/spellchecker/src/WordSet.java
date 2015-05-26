@@ -1,9 +1,12 @@
+import java.util.HashSet;
+import java.util.Iterator;
+
 public class WordSet {
-    private HashSet hs;
+    private HashSet <Word> hs;
 
     // Constructor
     public WordSet() {
-        this.hs = new HashSet();
+        this.hs = new HashSet <Word>();
     }
 
     public void add(Word w) {
@@ -19,7 +22,7 @@ public class WordSet {
         this.hs.clear();
     }
 
-    public Iterator iterator() {
+    public Iterator<Word> iterator() {
         return this.hs.iterator();
     }
 

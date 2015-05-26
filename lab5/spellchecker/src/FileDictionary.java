@@ -1,3 +1,7 @@
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.List;
+
 public class FileDictionary extends Dictionary {
     private String loadPath;
 
@@ -45,7 +49,7 @@ public class FileDictionary extends Dictionary {
         int tam;
         PrintWriter f = new PrintWriter(this.loadPath);
 
-        List String l = this.toStringList();
+        List <String> l = this.toStringList();
         tam = l.size();
         Word wLs[] = l.toArray();  // Lista de Word
         for (int i=0; i<tam; i++) {
@@ -59,7 +63,7 @@ public class FileDictionary extends Dictionary {
         int tam;
         PrintWriter f = new PrintWriter(fileName);
 
-        List String l = this.toStringList();
+        List <String> l = this.toStringList();
         tam = l.size();
         Word wLs[] = l.toArray();  // Lista de Word
         for (int i=0; i<tam; i++) {
