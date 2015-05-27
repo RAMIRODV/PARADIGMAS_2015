@@ -1,3 +1,5 @@
+package word;
+
 public class Word {
     private String word;
     
@@ -10,12 +12,21 @@ public class Word {
     public Word(String w) {
         this.word = w;
     }
+    
     public void setWord(String s) {
         this.word = s;
     }
 
     public String getWord() {
         return this.word;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;  // Numero primo.
+        int result = 1;
+        result = prime * result + ((word == "") ? 0 : word.hashCode());
+        return result;
     }
     
     @Override
@@ -28,13 +39,5 @@ public class Word {
         }
         Word other = (Word) obj;
         return word.equals(other.getWord());
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;  // Numero primo.
-        int result = 1;
-        result = prime * result + ((word == "") ? 0 : word.hashCode());
-        return result;
     }
 }

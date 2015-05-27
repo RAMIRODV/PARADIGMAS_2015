@@ -1,3 +1,5 @@
+package dictionary;
+
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.List;
@@ -81,7 +83,7 @@ public class FileDictionary extends Dictionary {
         }
         f.close();
     }
-
+// (VER!!!!!!! ---->>>>>> CODIGO REPETIDO!!!!!)
     /**
      * Este metodo guarda un diccionario a un archivo especifico.
      * @param fileName Nombre de archivo con el que se guardara el diccionario.
