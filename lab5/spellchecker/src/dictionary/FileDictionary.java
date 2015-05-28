@@ -66,6 +66,7 @@ public class FileDictionary extends Dictionary {
             }
             // Cierro el archivo.
             fr.close();
+            f.close();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -91,7 +92,8 @@ public class FileDictionary extends Dictionary {
     public void save(String fileName) {
         try {
             int tam;
-            PrintWriter f = new PrintWriter(fileName);
+            File newFile = new File(fileName);
+            PrintWriter f = new PrintWriter(newFile);
 
             List <String> ls = this.toStringList();
             tam = ls.size();
@@ -101,6 +103,7 @@ public class FileDictionary extends Dictionary {
                 f.println(ls.get(i));
             }
             f.close();
+            newFile.close();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
