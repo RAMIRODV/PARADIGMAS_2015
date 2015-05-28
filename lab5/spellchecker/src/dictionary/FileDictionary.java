@@ -2,6 +2,7 @@ package dictionary;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class FileDictionary extends Dictionary {
      */
     public void load(String file) {
         try {
-            FileReader fr = new FileReader(file);  // <<<<<<<<------ El archivo esta en el path?
+            File f = new File(file);
+            FileReader fr = new FileReader(f);  // <<<<<<<<------ El archivo esta en el path?
             // Leo el primer caracter y lo almaceno como un int.
             int c = fr.read();
             String str;
@@ -56,8 +58,9 @@ public class FileDictionary extends Dictionary {
                     str = sb.toString();
                     Word w = new Word(str);
                     this.add(w);
+                    System.out.println("Agregado: " + w.getWord());
                     // Limpio el stringBuilder sb.
-                    sb.delete(0, str.length()-1);
+                    sb.delete(0, str.length());
                 }
                 c = fr.read();
             }
