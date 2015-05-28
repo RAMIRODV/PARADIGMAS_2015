@@ -16,7 +16,8 @@ public class Document {
 			FileWriter out = new FileWriter(fileOut);
 			this.output = new BufferedWriter(out);
 		} catch(IOException msg) {
-			System.out.println("Error:"+msg.getMessage());
+			System.out.println("Error Document:" + msg.getMessage());
+            System.exit(1);
 		};
 	}
 	
@@ -25,15 +26,16 @@ public class Document {
 			this.input.close();
 			this.output.close();
 		} catch(IOException msg) {
-			System.out.println("Error:"+msg.getMessage());
+			System.out.println("Error Document.close:" + msg.getMessage());
+            System.exit(1);
 		};
 		
 	}
 	
 	public Word getWord() {
-		try {
+        String temp_word = "";		
+        try {
 			int character;
-            String temp_word = "";
 			int flag = 0;
 			PrintWriter put_word = new PrintWriter(this.output);
 			while(true)	{
@@ -45,8 +47,7 @@ public class Document {
 						} else {
 							this.input.reset();
                             put_word.close();
-                            Word word = new Word();
-							return word;
+                            break;
 						}
 					} else {
 						temp_word += (char) character;
@@ -58,11 +59,12 @@ public class Document {
 				};
 			}
             put_word.close();
-            Word word = new Word(temp_word);
-			return word;
 		} catch(IOException msg) {
-			System.out.println("Error:"+msg.getMessage());
+			System.out.println("Error Document.getWord:" + msg.getMessage());
+            System.exit(1);
 		};
+        Word word = new Word(temp_word);
+		return word;
 	}
 	
 	public void putWord(Word word) {
@@ -71,8 +73,9 @@ public class Document {
 			PrintWriter put_word = new PrintWriter(this.output);
 			put_word.write(word_write);
 			put_word.close();
-		} catch(IOException msg) {
-			System.out.println("Error:"+msg.getMessage());
+		} catch(Exception msg) {
+			System.out.println("Error Document.putWord:" + msg.getMessage());
+            System.exit(1);
 		};
 	}
 }

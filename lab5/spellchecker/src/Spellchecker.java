@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 import java.util.Scanner;
 
 import document.Document;
@@ -12,16 +12,18 @@ public class Spellchecker {
 	public Spellchecker() {}
 	
 	public static Word consultUser(Word word, Dictionary main_dict, Dictionary ignored) {
-		try {
+		String new_word = "";
+        try {
             char c;
+            //Scanner reader = new Scanner(System.in);
 			do {
-				System.out.println ("Palabra no reconocida: "+word+" Aceptar (a) - Ignorar (i) - Reemplazar (r): ");
-				Scanner reader = new Scanner(System.in);
-				c = reader.next().charAt(0);
-                reader.reset();
+				System.out.println ("Palabra no reconocida: '"+word.getWord()+"'. Aceptar (a) - Ignorar (i) - Reemplazar (r): ");				
+				//c = reader.next(".").charAt(0);
+                //reader.reset();
+                c = (char) System.in.read();
 			} while ((c != 'a') && (c != 'i') && (c != 'r'));
-			String new_word = "";
-			Scanner reader2 = new Scanner(System.in);
+            //reader.close();
+			Scanner reader_word = new Scanner(System.in);
 			switch (c) {
 			case 'a':
 				main_dict.add(word);
@@ -31,14 +33,16 @@ public class Spellchecker {
 				break;
 			case 'r':
 				System.out.println ("Ingrese una nueva palabra: ");
-				new_word = reader2.nextLine();
+				new_word = reader_word.nextLine();
 				break;
 			}
-            Word newWord = new Word(new_word);
-			return newWord;
+            reader_word.close();
 		} catch(Exception msg) {
-			System.out.println("Error:"+msg.getMessage());
+			System.out.println("Error consultUser:" + msg.getMessage());
+            System.exit(1);
 		};
+        Word newWord = new Word(new_word);
+	    return newWord;
 	}
 
 	public static void processDocument(String fname_in, String fname_out, Dictionary main_dict, Dictionary ignored) {
@@ -57,7 +61,8 @@ public class Spellchecker {
 			}
 			doc.close();
 		} catch(Exception msg) {
-			System.out.println("Error:"+msg.getMessage());
+			System.out.println("Error processDocument:" + msg.getMessage());
+            System.exit(1);
 		};
 			
 	}
