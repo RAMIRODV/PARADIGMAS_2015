@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Scanner;
+
 import document.Document;
 import dictionary.Dictionary;
 import dictionary.FileDictionary;
@@ -8,18 +9,18 @@ import word.Word;
 
 public class Spellchecker {
 
-	public Spellcheker() {
-		//????
-	}
+	public Spellchecker() {}
 	
 	public static Word consultUser(Word word, Dictionary main_dict, Dictionary ignored) {
 		try {
+            char c;
 			do {
 				System.out.println ("Palabra no reconocida: "+word+" Aceptar (a) - Ignorar (i) - Reemplazar (r): ");
 				Scanner reader = new Scanner(System.in);
-				char c = reader.next(".").charAt(0);
-			} while (c != 'a' && c != 'i' && c != 'r');
-			String new_word;
+				c = reader.next().charAt(0);
+                reader.reset();
+			} while ((c != 'a') && (c != 'i') && (c != 'r'));
+			String new_word = "";
 			Scanner reader2 = new Scanner(System.in);
 			switch (c) {
 			case 'a':
@@ -31,20 +32,20 @@ public class Spellchecker {
 			case 'r':
 				System.out.println ("Ingrese una nueva palabra: ");
 				new_word = reader2.nextLine();
-				word = new_word;
 				break;
 			}
-			return word;
-		} catch(IOException msg) {
+            Word newWord = new Word(new_word);
+			return newWord;
+		} catch(Exception msg) {
 			System.out.println("Error:"+msg.getMessage());
 		};
 	}
 
 	public static void processDocument(String fname_in, String fname_out, Dictionary main_dict, Dictionary ignored) {
 		try {
-			Word current_word;
+			Word current_word = new Word();
 			Document doc = new Document(fname_in, fname_out);
-			while (flag) {
+			while (true) {
 				current_word = doc.getWord();
 				if ((current_word.getWord()) == "") {
 					break;
@@ -55,7 +56,7 @@ public class Spellchecker {
 				doc.putWord(current_word);
 			}
 			doc.close();
-		} catch(IOException msg) {
+		} catch(Exception msg) {
 			System.out.println("Error:"+msg.getMessage());
 		};
 			
@@ -63,14 +64,14 @@ public class Spellchecker {
 
 	public static void main(String[] args) {
 		String dict_path;
-		int i = args.length();
+		int i = args.length;
 		if (i < 1) {
 			System.out.println ("spellchecker.java: nro de argumentos erroneo. Deben ser <documento> [<diccionario>].");
-			System.exit();
+			System.exit(1);
 		}
-		dict_path = (argc >=2) ? args[1] : "dict.txt";
+		dict_path = (i >= 2) ? args[1] : "dict.txt";
 		FileDictionary main_dict = new FileDictionary();
-		main_load.load(dict_path);
+		main_dict.load(dict_path);
 		MemDictionary ignored = new MemDictionary();
 		processDocument(args[0], "out.txt", main_dict, ignored);
 		main_dict.save();
