@@ -69,7 +69,7 @@ public class FileDictionary extends Dictionary {
             // f.close();
         }
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error FileDictionary.load:" + e.getMessage());
         }
     }
 
@@ -111,7 +111,8 @@ public class FileDictionary extends Dictionary {
             //newFile.close();
         }
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error FileDictionary.save:" + e.getMessage());
+            System.exit(1);
         }
     }
 }

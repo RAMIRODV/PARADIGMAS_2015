@@ -1,4 +1,3 @@
-//import java.io.IOException;
 import java.util.Scanner;
 
 import document.Document;
@@ -12,20 +11,15 @@ public class Spellchecker {
     public Spellchecker() {}
 
     public static Word consultUser(Word word, Dictionary main_dict, Dictionary ignored) {
-        String new_word = "";
-        // System.out.println("Voy a agregar: " + word.getWord());
         try {
             char c;
-            //Scanner reader = new Scanner(System.in);
-            Scanner sc = new Scanner(System.in).useDelimiter("\\s*");
+            Scanner reader_char = new Scanner(System.in).useDelimiter("\\s*");
             do {
-                System.out.println ("Palabra no reconocida: '"+word.getWord()+"'. Aceptar (a) - Ignorar (i) - Reemplazar (r): ");				
-                //c = reader.next(".").charAt(0);
-                //reader.reset();
-                //c = (char) System.in.read();
-                c = sc.next().charAt(0);
+                reader_char.reset();
+                System.out.println ("Palabra no reconocida: '"+word.getWord()+"'. Aceptar (a) - Ignorar (i) - Reemplazar (r): ");
+                c = reader_char.next().charAt(0);
+                reader_char.reset();
             } while ((c != 'a') && (c != 'i') && (c != 'r'));
-            //reader.close();
             switch (c) {
                 case 'a':
                     main_dict.add(word);
@@ -34,34 +28,33 @@ public class Spellchecker {
                     ignored.add(word);
                     break;
                 case 'r':
+                    String new_word = "";
                     Scanner reader_word = new Scanner(System.in);
                     System.out.println ("Ingrese una nueva palabra: ");
                     new_word = reader_word.nextLine();
+                    word.setWord(new_word);                    
                     break;
                 default:
                     break;
             }
-            //reader_word.close();
         } catch(Exception msg) {
             System.out.println("Error consultUser:" + msg.getMessage());
             System.exit(1);
         };
-        Word newWord = new Word(new_word);
-        // System.out.println("Se agrego: " + word.getWord());
-        return newWord;
+        return word;
     }
 
     public static void processDocument(String fname_in, String fname_out, Dictionary main_dict, Dictionary ignored) {
         try {
-            Word current_word = new Word();
+            Word current_word = new Word();    //
             Document doc = new Document(fname_in, fname_out);
             while (true) {
                 current_word = doc.getWord();
                 if ((current_word.getWord()) == "") {
                     break;
                 }
-                if (!(main_dict.contains(current_word)) && !(ignored.contains(current_word))) {
-                    current_word = consultUser(current_word, main_dict, ignored);
+                if (!(main_dict.contains(current_word)) && !(ignored.contains(current_word))) {    // ¿Es una palabra desconocida?
+                    current_word = consultUser(current_word, main_dict, ignored);    // Palabra desconocida.
                 }
                 doc.putWord(current_word);
             }
@@ -85,9 +78,9 @@ public class Spellchecker {
         main_dict.load(dict_path);
         MemDictionary ignored = new MemDictionary();
         processDocument(args[0], "out.txt", main_dict, ignored);
-        main_dict.save();
+        main_dict.save(dict_path);
         main_dict.clear();
         ignored.clear();
-        System.out.println ("El documento "+args[1]+ " ha sido procesado. Resultados en out.txt");
+        System.out.println ("El documento '"+args[0]+ "' ha sido procesado. Resultados en out.txt");
     }	
 }
