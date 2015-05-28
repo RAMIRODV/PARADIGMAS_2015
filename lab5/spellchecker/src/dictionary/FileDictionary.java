@@ -25,7 +25,7 @@ public class FileDictionary extends Dictionary {
      * dict.txt.
      */
     public FileDictionary() {
-        this.loadPath = "../";
+        this.loadPath = "";
     }
 
     /**
@@ -58,7 +58,7 @@ public class FileDictionary extends Dictionary {
                     str = sb.toString();
                     Word w = new Word(str);
                     this.add(w);
-                    System.out.println("Agregado: " + w.getWord());
+                    //System.out.println("Agregado: " + w.getWord());
                     // Limpio el stringBuilder sb.
                     sb.delete(0, str.length());
                 }
@@ -66,7 +66,7 @@ public class FileDictionary extends Dictionary {
             }
             // Cierro el archivo.
             fr.close();
-            f.close();
+            // f.close();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -80,7 +80,12 @@ public class FileDictionary extends Dictionary {
      * el archivo.
      */
     public void save() {
-        save(this.loadPath + "dict.txt"); // Si es le path completo al archivo
+        if (this.loadPath == "") {
+            save(this.loadPath + "dict.txt"); // Si es le path completo al archivo
+        }
+        else {
+            save(this.loadPath);
+        }
     }
 // (VER!!!!!!! ---->>>>>> CODIGO REPETIDO!!!!!)
     /**
@@ -103,7 +108,7 @@ public class FileDictionary extends Dictionary {
                 f.println(ls.get(i));
             }
             f.close();
-            newFile.close();
+            //newFile.close();
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
