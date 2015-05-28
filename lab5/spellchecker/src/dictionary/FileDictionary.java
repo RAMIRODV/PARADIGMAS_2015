@@ -1,8 +1,11 @@
 package dictionary;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.List;
+
+import word.Word;
 
 public class FileDictionary extends Dictionary {
 	/**
@@ -21,11 +24,11 @@ public class FileDictionary extends Dictionary {
      * dict.txt.
      */
     public FileDictionary() {
-        this.loadPath = "";
+        this.loadPath = "../";
     }
 
     /**
-     * Constructor de la clase con la ruta del archivo especifico.
+     * Constructor de la clase con la ruta del directorio especifico.
      * @param s Path del archivo especificado por el usuario.
      */
     public FileDictionary(String s) {
@@ -38,7 +41,7 @@ public class FileDictionary extends Dictionary {
      */
     public void load(String file) {
         try {
-            FileReader fr = new FileReader(file);
+            FileReader fr = new FileReader(file);  // <<<<<<<<------ El archivo esta en el path?
             // Leo el primer caracter y lo almaceno como un int.
             int c = fr.read();
             String str;
@@ -62,43 +65,42 @@ public class FileDictionary extends Dictionary {
             fr.close();
         }
         catch (Exception e) {
-            System.out.println("Exception leyendo fichero " + file + ": " + e);
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     /**
      * Este metodo guarda el diccionario a un archivo por defecto llamado
      * dict.txt.
+     * @throws FileNotFoundException Levanta una exception si no pudo abrir
+     * el archivo.
      */
     public void save() {
-        int tam;
-        PrintWriter f = new PrintWriter(this.loadPath);
-
-        List <String> l = this.toStringList();
-        tam = l.size();
-        Word wLs[] = l.toArray();  // Lista de Word
-        for (int i=0; i<tam; i++) {
-            String s = wLs[i].getWord();
-            f.println(s);
-        }
-        f.close();
+        save(this.loadPath + "dict.txt"); // Si es le path completo al archivo
     }
 // (VER!!!!!!! ---->>>>>> CODIGO REPETIDO!!!!!)
     /**
      * Este metodo guarda un diccionario a un archivo especifico.
      * @param fileName Nombre de archivo con el que se guardara el diccionario.
+     * @throws FileNotFoundException levanta una exception si no encuentra el
+     * archivo.
      */
     public void save(String fileName) {
-        int tam;
-        PrintWriter f = new PrintWriter(fileName);
+        try {
+            int tam;
+            PrintWriter f = new PrintWriter(fileName);
 
-        List <String> l = this.toStringList();
-        tam = l.size();
-        Word wLs[] = l.toArray();  // Lista de Word
-        for (int i=0; i<tam; i++) {
-            String s = wLs[i].getWord();
-            f.println(s);
+            List <String> ls = this.toStringList();
+            tam = ls.size();
+            //Word wLs[] = l.toArray();  // Lista de Word
+            for (int i=0; i<tam; i++) {
+                //String s = wLs[i].getWord();
+                f.println(ls.get(i));
+            }
+            f.close();
         }
-        f.close();
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
