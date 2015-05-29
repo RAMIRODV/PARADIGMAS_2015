@@ -7,14 +7,12 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import word.Word;
+import word.ExceptionContainsSpace;
 
 public class FileDictionary extends Dictionary {
 	/**
 	 * Esta classe representa un diccionario que se carga desde un archivo de
 	 * texto. Es una subclase de Dictionary.
-	 * @version 0.1
-	 * @author Fernando Copa.
-	 * @author Ramiro Della Vedova.
 	 */
 	
     private String loadPath;
@@ -25,7 +23,7 @@ public class FileDictionary extends Dictionary {
      * dict.txt.
      */
     public FileDictionary() {
-        this.loadPath = "";
+        this.loadPath = "dict.txt";
     }
 
     /**
@@ -43,7 +41,7 @@ public class FileDictionary extends Dictionary {
     public void load(String file) {
         try {
             File f = new File(file);
-            FileReader fr = new FileReader(f);  // <<<<<<<<------ El archivo esta en el path?
+            FileReader fr = new FileReader(f);
             // Leo el primer caracter y lo almaceno como un int.
             int c = fr.read();
             String str;
@@ -58,7 +56,6 @@ public class FileDictionary extends Dictionary {
                     str = sb.toString();
                     Word w = new Word(str);
                     this.add(w);
-                    //System.out.println("Agregado: " + w.getWord());
                     // Limpio el stringBuilder sb.
                     sb.delete(0, str.length());
                 }
@@ -66,7 +63,6 @@ public class FileDictionary extends Dictionary {
             }
             // Cierro el archivo.
             fr.close();
-            // f.close();
         }
         catch (Exception e) {
             System.out.println("Error FileDictionary.load:" + e.getMessage());
@@ -87,7 +83,7 @@ public class FileDictionary extends Dictionary {
             save(this.loadPath);
         }
     }
-// (VER!!!!!!! ---->>>>>> CODIGO REPETIDO!!!!!)
+
     /**
      * Este metodo guarda un diccionario a un archivo especifico.
      * @param fileName Nombre de archivo con el que se guardara el diccionario.
@@ -102,13 +98,10 @@ public class FileDictionary extends Dictionary {
 
             List <String> ls = this.toStringList();
             tam = ls.size();
-            //Word wLs[] = l.toArray();  // Lista de Word
             for (int i=0; i<tam; i++) {
-                //String s = wLs[i].getWord();
                 f.println(ls.get(i));
             }
             f.close();
-            //newFile.close();
         }
         catch (Exception e) {
             System.out.println("Error FileDictionary.save:" + e.getMessage());
