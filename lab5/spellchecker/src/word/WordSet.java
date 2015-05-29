@@ -3,10 +3,13 @@ package word;
 import java.util.HashSet;
 import java.util.Iterator;
 
-/**
- * Esta clase proporciona una coleccion de words.
- */
+    /**
+     * Esta clase proporciona una coleccion de words.
+     * Conforma el package word.
+     */
 public class WordSet {
+
+    /** Atributo: Objeto HashSet. */
     private HashSet <Word> hs;
 
     /**
@@ -16,10 +19,14 @@ public class WordSet {
         this.hs = new HashSet <Word>();
     }
 
+    /** Metodos */
+
     /**
-     * Este metodo agrega un word a la coleccion.
+     * NAME : Metodo add
      *
-     * @param w El word a agregar.
+     * DESCRIPTION : Agrega un word a la coleccion.
+     * @param w    El word a agregar.
+     * @return void
      */
     public void add(Word w) {
         // ATENCION: hs.add(obj)  devuelve un booleano.
@@ -27,9 +34,10 @@ public class WordSet {
     }
 
     /**
-     * Este metodo verifica si el word se encuentra en la coleccion.
+     * NAME : Metodo add
      *
-     * @param w El word a verificar si se encuentra en la coleccion.
+     * DESCRIPTION : Verifica si el word se encuentra en la coleccion.
+     * @param w    El word a verificar si se encuentra en la coleccion.
      * @return true Si el word ya existe en la coleccion, false en caso contrario.
      */
     public boolean contains(Word w) {
@@ -37,15 +45,21 @@ public class WordSet {
     }
 
     /**
-     * Este metodo elimina todos los lementos de la coleccion.
+     * NAME : Metodo clear
+     *
+     * DESCRIPTION : Elimina todos los elementos de la coleccion.
+     * @param void
+     * @return void
      */
     public void clear() {
         this.hs.clear();
     }
 
     /**
-     * Este metodo devuelve un iterator de tipo Word.
+     * NAME : Metodo iterator
      *
+     * DESCRIPTION : Devuelve un iterator de tipo Word.
+     * @param void
      * @return Iterator de la coleccion.
      */
     public Iterator<Word> iterator() {
@@ -53,8 +67,10 @@ public class WordSet {
     }
 
     /**
-     * Este metodo devuelve el tamano de la coleccion.
+     * NAME : Metodo iterator
      *
+     * DESCRIPTION : Devuelve el tamano de la coleccion.
+     * @param void
      * @return Tamano entero de la coleccion.
      */
     public int size() {

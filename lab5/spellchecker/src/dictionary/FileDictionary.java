@@ -9,12 +9,14 @@ import java.util.List;
 import word.Word;
 import word.ExceptionContainsSpace;
 
-public class FileDictionary extends Dictionary {
-	/**
+    /**
 	 * Esta classe representa un diccionario que se carga desde un archivo de
 	 * texto. Es una subclase de Dictionary.
+     * Conforma el package dictionary.
 	 */
+public class FileDictionary extends Dictionary {
 	
+    /** Atributo: Path del diccionario. */
     private String loadPath;
 
     /**
@@ -34,9 +36,14 @@ public class FileDictionary extends Dictionary {
         this.loadPath = s;
     }
 
+     /** Metodos */
+
     /**
-     * Este metodo carga un diccionario desde un archivo.
-     * @param file Nombre del archivo diccionario.
+     * NAME : Metodo load
+     *
+     * DESCRIPTION : Carga un diccionario desde un archivo.
+     * @param file    Nombre del archivo diccionario.
+     * @return void
      */
     public void load(String file) {
         try {
@@ -65,15 +72,19 @@ public class FileDictionary extends Dictionary {
             fr.close();
         }
         catch (Exception e) {
-            System.out.println("Error FileDictionary.load:" + e.getMessage());
+            System.out.println("Error:" + e.getMessage());
         }
     }
 
     /**
-     * Este metodo guarda el diccionario a un archivo por defecto llamado
-     * dict.txt.
-     * @throws FileNotFoundException Levanta una exception si no pudo abrir
-     * el archivo.
+     * NAME : Metodo save
+     *
+     * DESCRIPTION : Guarda el diccionario a un archivo por defecto llamado
+     *               dict.txt.
+     * @param void
+     * @return void
+     * @throws FileNotFoundException    Levanta una exception si no pudo abrir
+     *                                  el archivo.
      */
     public void save() {
         if (this.loadPath == "") {
@@ -85,17 +96,19 @@ public class FileDictionary extends Dictionary {
     }
 
     /**
-     * Este metodo guarda un diccionario a un archivo especifico.
-     * @param fileName Nombre de archivo con el que se guardara el diccionario.
-     * @throws FileNotFoundException levanta una exception si no encuentra el
-     * archivo.
+     * NAME : Metodo save
+     *
+     * DESCRIPTION : Guarda un diccionario a un archivo especifico.
+     * @param fileName    Nombre de archivo con el que se guardara el diccionario.
+     * @return void
+     * @throws FileNotFoundException    Levanta una exception si no encuentra el
+     *                                  archivo.
      */
     public void save(String fileName) {
         try {
             int tam;
             File newFile = new File(fileName);
             PrintWriter f = new PrintWriter(newFile);
-
             List <String> ls = this.toStringList();
             tam = ls.size();
             for (int i=0; i<tam; i++) {
@@ -104,7 +117,7 @@ public class FileDictionary extends Dictionary {
             f.close();
         }
         catch (Exception e) {
-            System.out.println("Error FileDictionary.save:" + e.getMessage());
+            System.out.println("Error:" + e.getMessage());
             System.exit(1);
         }
     }

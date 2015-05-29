@@ -1,19 +1,22 @@
 package word;
 
-/**
- * Esta clase representa una palabra sin espacios, ni tabs, ni retornos de
- * linea.
- */
-public class Word {
-    private String word;
-    
     /**
-     * Constructor.
+    * Esta clase representa una palabra sin espacios, ni tabs, ni retornos de
+    * linea.
+    * Conforma el package word.
+    */
+public class Word {
+
+    /** Atributo: String. */
+    private String word;
+
+    /**
+     * Constructor por defecto.
      */
     public Word() {
         this.word = "";
     }
-    
+
     /**
      * Constructor Word con el string especificado, este no debe contener
      * espacios en blancos.
@@ -29,10 +32,14 @@ public class Word {
         }
     }
 
+    /** Metodos */
+
     /**
-     * Este metodo modifica el Word con el string especificado.
+     * NAME : Metodo setWord
      *
-     * @param s String con el cual se modificara Word.
+     * DESCRIPTION : Modifica el Word con el string especificado.
+     * @param s    String con el cual se modificara Word.
+     * @return void
      * @throws ExceptionContainsSpace Si el string contiene espacios.
      */
     public void setWord(String s) throws ExceptionContainsSpace {
@@ -43,8 +50,10 @@ public class Word {
     }
 
     /**
-     * Este metodo devuelve la palabra en forma de String.
+     * NAME : Metodo getWord
      *
+     * DESCRIPTION : Devuelve la palabra en forma de String.
+     * @param void
      * @return El string de este word.
      */
     public String getWord() {
@@ -52,8 +61,10 @@ public class Word {
     }
 
     /**
-     * Este metodo rescribe el hashcode adecuandolo para word.
+     * NAME : Metodo getWord
      *
+     * DESCRIPTION : Reescribe el hashcode adecuandolo para word.
+     * @param void
      * @return El valor del hash code.
      */
     @Override
@@ -63,11 +74,12 @@ public class Word {
         result = prime * result + ((word == "") ? 0 : word.hashCode());
         return result;
     }
-    
+
     /**
-     * Este metodo compara dos clases word.
+     * NAME : Metodo getWord
      *
-     * @param obj El objeto a comparar con el actual word.
+     * DESCRIPTION : Compara dos clases word.
+     * @param obj    El objeto a comparar con el actual word.
      * @return true si son iguales los word y false en caso contrario.
      */
     @Override
