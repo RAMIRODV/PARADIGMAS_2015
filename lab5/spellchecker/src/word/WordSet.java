@@ -22,11 +22,8 @@ public class WordSet {
     /** Metodos */
 
     /**
-     * NAME : Metodo add
-     *
-     * DESCRIPTION : Agrega un word a la coleccion.
-     * @param w    El word a agregar.
-     * @return void
+     * Metodo add: Agrega un word a la coleccion.
+     * @param w: El word a agregar.
      */
     public void add(Word w) {
         // ATENCION: hs.add(obj)  devuelve un booleano.
@@ -34,31 +31,24 @@ public class WordSet {
     }
 
     /**
-     * NAME : Metodo add
-     *
-     * DESCRIPTION : Verifica si el word se encuentra en la coleccion.
-     * @param w    El word a verificar si se encuentra en la coleccion.
-     * @return true Si el word ya existe en la coleccion, false en caso contrario.
+     * Metodo add: Verifica si el word se encuentra en la coleccion.
+     * @param w: El word a verificar si se encuentra en la coleccion.
+     * @return true si el word ya existe en la coleccion, false en caso contrario.
      */
     public boolean contains(Word w) {
         return this.hs.contains(w);
     }
 
     /**
-     * NAME : Metodo clear
-     *
-     * DESCRIPTION : Elimina todos los elementos de la coleccion.
+     * Metodo clear: Elimina todos los elementos de la coleccion.
      * @param void
-     * @return void
      */
     public void clear() {
         this.hs.clear();
     }
 
     /**
-     * NAME : Metodo iterator
-     *
-     * DESCRIPTION : Devuelve un iterator de tipo Word.
+     * Metodo iterator: Devuelve un iterator de tipo Word.
      * @param void
      * @return Iterator de la coleccion.
      */
@@ -67,9 +57,7 @@ public class WordSet {
     }
 
     /**
-     * NAME : Metodo iterator
-     *
-     * DESCRIPTION : Devuelve el tamano de la coleccion.
+     * Metodo iterator: Devuelve el tamano de la coleccion.
      * @param void
      * @return Tamano entero de la coleccion.
      */

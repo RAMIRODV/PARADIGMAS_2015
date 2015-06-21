@@ -7,11 +7,11 @@ import dictionary.MemDictionary;
 import word.Word;
 
     /**
-	 * Esta clase representa a Spellchecker.
+     * Esta clase representa a Spellchecker.
      * Conforma el default package.
      * @version 0.1
-	 * @author Fernando Copa.
-	 * @author Ramiro Della Vedova.
+     * @author Fernando Copa.
+     * @author Ramiro Della Vedova.
      */
 
 public class Spellchecker {
@@ -24,17 +24,15 @@ public class Spellchecker {
     /** Metodos */
 
     /**
-     * NAME : Metodo consultUser
-     *
-     * DESCRIPTION : Consulta al usuario sobre que accion realizar 
-     *               (aceptar, ignorar o reemplazar) con la palabra word.
-     *               Una vez que el usuario elige, realiza la accion 
-     *               elegida.
-     * @param word    Palabra sobre la cual se consulta la accion a realizar.
-     * @param main_dict    Diccionario principal.
-     * @param main_dict    Diccionario de palabras ignoradas.
-     * @return Word    Palabra ya consultada, o nueva palabra.
-     * @throws IOException    Si se produce un error.
+     * Metodo consultUser: Consulta al usuario sobre que accion realizar 
+     *                     (aceptar, ignorar o reemplazar) con la palabra word.
+     *                     Una vez que el usuario elige, realiza la accion 
+     *                     elegida.
+     * @param word: Palabra sobre la cual se consulta la accion a realizar.
+     * @param main_dict: Diccionario principal.
+     * @param ignored: Diccionario de palabras ignoradas.
+     * @return Word: Palabra ya consultada, o nueva palabra.
+     * @throws IOException: Si se produce un error.
      */
     public static Word consultUser(Word word, Dictionary main_dict, Dictionary ignored) {
         try {
@@ -54,10 +52,31 @@ public class Spellchecker {
                     ignored.add(word);
                     break;
                 case 'r':    // Reemplaza la palabra.
+                    int i = 0;    // Indice.
+                    boolean flag = true;    // Bandera de error.
                     String new_word = "";    // Nueva palabra.
                     Scanner reader_word = new Scanner(System.in);    // Objeto scanner de la nueva palabra.
-                    System.out.println ("Ingrese una nueva palabra: ");
-                    new_word = reader_word.nextLine();    // Lee la palabra.
+                    while (true) {
+                        reader_word.reset();    // Se limpia el scanner.
+                        System.out.println ("Ingrese una nueva palabra: ");
+                        new_word = reader_word.nextLine();    // Lee la palabra.
+                        if (new_word.length() < 30) {    // Tamaño maximo de palabra.
+                            while (i < new_word.length()) {
+                                if (!Character.isLetter(new_word.charAt(i))) {    // Verifica que sean caracteres alfabeticos.
+                                    System.out.println("ERROR: Palabra no valida.");
+                                    flag = false;    // Palabra no valida.
+                                    i = 0;
+                                    break;
+                                }
+                                i++;
+                            }
+                            if (flag) { break; }    // Palabra valida.
+                        } else {    // Excedio el tamaño maximo.
+                            System.out.println("ERROR: Palabra no valida.");
+                        }
+                        flag = true;
+                        reader_word.reset();    // Se limpia el scanner.
+                    }
                     word.setWord(new_word);    // Pasa la palabra a Word.
                     break;
                 default:
@@ -71,17 +90,14 @@ public class Spellchecker {
     }
 
     /**
-     * NAME : Metodo processDocument
-     *
-     * DESCRIPTION : Procesa el documento fname_in, palabra por palabra,
-     *               consultando al usuario sobre la accion a realizar
-     *               si la palabra no es conocida.
-     * @param fname_in    Nombre del archivo a procesar.
-     * @param fname_out    Nombre del archivo de salida.
-     * @param main_dict    Diccionario principal.
-     * @param main_dict    Diccionario de palabras ignoradas.
-     * @return void
-     * @throws IOException    Si se produce un error.
+     * Metodo processDocument: Procesa el documento fname_in, palabra por palabra,
+     *                         consultando al usuario sobre la accion a realizar
+     *                         si la palabra no es conocida.
+     * @param fname_in: Nombre del archivo a procesar.
+     * @param fname_out: Nombre del archivo de salida.
+     * @param main_dict: Diccionario principal.
+     * @param ignored: Diccionario de palabras ignoradas.
+     * @throws IOException: Si se produce un error.
      */
     public static void processDocument(String fname_in, String fname_out, Dictionary main_dict, Dictionary ignored) {
         try {
@@ -105,9 +121,7 @@ public class Spellchecker {
     }
 
     /**
-     * NAME : Metodo main
-     *
-     * DESCRIPTION : Punto de entrada principal. Abre el diccionario
+     * Metodo main: Punto de entrada principal. Abre el diccionario
      *               principal, procesa el archivo especificado y
      *               guarda los cambios realizados en el diccionario
      *               principal.

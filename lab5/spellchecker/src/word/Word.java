@@ -21,38 +21,24 @@ public class Word {
      * Constructor Word con el string especificado, este no debe contener
      * espacios en blancos.
      *
-     * @param w El string sin espacios.
+     * @param w: El string sin espacios.
      */
     public Word(String w) {
-        try {
-            this.setWord(w);
-        }
-        catch (ExceptionContainsSpace e) {
-            System.out.println("Error: " + e);
-        }
+        this.setWord(w);
     }
 
     /** Metodos */
 
     /**
-     * NAME : Metodo setWord
-     *
-     * DESCRIPTION : Modifica el Word con el string especificado.
-     * @param s    String con el cual se modificara Word.
-     * @return void
-     * @throws ExceptionContainsSpace Si el string contiene espacios.
+     * Metodo setWord: Modifica el Word con el string especificado.
+     * @param s: String con el cual se modificara Word.
      */
-    public void setWord(String s) throws ExceptionContainsSpace {
-        if (s.contains("\\s")) {
-            throw new ExceptionContainsSpace("Palabra con espacios.");
-        }
+    public void setWord(String s) {
         this.word = s;
     }
 
     /**
-     * NAME : Metodo getWord
-     *
-     * DESCRIPTION : Devuelve la palabra en forma de String.
+     * Metodo getWord: Devuelve la palabra en forma de String.
      * @param void
      * @return El string de este word.
      */
@@ -61,9 +47,7 @@ public class Word {
     }
 
     /**
-     * NAME : Metodo getWord
-     *
-     * DESCRIPTION : Reescribe el hashcode adecuandolo para word.
+     * Metodo getWord: Reescribe el hashcode adecuandolo para word.
      * @param void
      * @return El valor del hash code.
      */
@@ -76,10 +60,8 @@ public class Word {
     }
 
     /**
-     * NAME : Metodo getWord
-     *
-     * DESCRIPTION : Compara dos clases word.
-     * @param obj    El objeto a comparar con el actual word.
+     * Metodo getWord: Compara dos clases word.
+     * @param obj: El objeto a comparar con el actual word.
      * @return true si son iguales los word y false en caso contrario.
      */
     @Override

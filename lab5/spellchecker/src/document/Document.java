@@ -23,10 +23,10 @@ public class Document {
     /** Constructor de la clase.
      * Abre los archivos de entrada y de salida,
      * colocandolos en los atributos de la clase.
-     * @param fname_in    Archivo de entrada.
-     * @param fname_out    Archivo de salida.
+     * @param fname_in: Archivo de entrada.
+     * @param fname_out: Archivo de salida.
      * @return Objeto Document.
-     * @throws IOException    Si se produce un error al crear el objeto.
+     * @throws IOException: Si se produce un error al crear el objeto.
      */
 	public Document(String fname_in, String fname_out) {
 		try {
@@ -45,12 +45,9 @@ public class Document {
     /** Metodos */
 
     /**
-     * NAME : Metodo close
-     *
-     * DESCRIPTION : Cierra los archivos de entrada y de salida.
+     * Metodo close: Cierra los archivos de entrada y de salida.
      * @param void
-     * @return void
-     * @throws IOException    Si se produce un error al cerrar los archivos.
+     * @throws IOException: Si se produce un error al cerrar los archivos.
      */
 	public void close() {
 		try {
@@ -63,15 +60,13 @@ public class Document {
 	}
 
     /**
-     * NAME : Metodo getWord
-     *
-     * DESCRIPTION : Lee una palabra del archivo de entrada, copiando
-     *               todo caracter de puntuacion precedente al archivo
-     *               de salida.
+     * Metodo getWord: Lee una palabra del archivo de entrada, copiando
+     *                 todo caracter de puntuacion precedente al archivo
+     *                 de salida.
      * @param void
-     * @return Word    Palabra que se lee desde el archivo.
-     * @throws EOFException    Levanta una excepcion al llegar al EOF.
-     * @throws IOException    Si se produce un error al leer el documento.
+     * @return Word: Palabra que se lee desde el archivo.
+     * @throws EOFException: Levanta una excepcion al llegar al EOF.
+     * @throws IOException: Si se produce un error al leer el documento.
      */
     public Word getWord() {
         String temp_word = "";    // Palabra a leer del documento.
@@ -93,7 +88,7 @@ public class Document {
                         temp_word += (char) character;
                         flag = 1;    // Se leyo un caracter alfabetico.
                         this.input.mark(30);    // Marca hasta donde leyo.
-                        if (temp_word.length() > 30) {
+                        if (temp_word.length() >= 30) {
                             System.out.println("Error: El documento posee palabras mayores al tamaño maximo permitido.");
                             System.exit(1);    // Salida forzosa del programa por ingresar un documento no valido.
                         }
@@ -111,12 +106,9 @@ public class Document {
     }
 
     /**
-     * NAME : Metodo putWord
-     *
-     * DESCRIPTION : Escribe la palabra word al archivo de salida.
-     * @param word    Palabra a escribir.
-     * @return void
-     * @throws IOException    Si se produce un error al escribir en el archivo de salida.
+     * Metodo putWord: Escribe la palabra word al archivo de salida.
+     * @param word: Palabra a escribir.
+     * @throws IOException: Si se produce un error al escribir en el archivo de salida.
      */
 	public void putWord(Word word) {
 		try {

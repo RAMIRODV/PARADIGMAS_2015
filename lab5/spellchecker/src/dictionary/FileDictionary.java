@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import word.Word;
-import word.ExceptionContainsSpace;
 
     /**
 	 * Esta classe representa un diccionario que se carga desde un archivo de
@@ -30,7 +29,7 @@ public class FileDictionary extends Dictionary {
 
     /**
      * Constructor de la clase con la ruta del directorio especifico.
-     * @param s Path del archivo especificado por el usuario.
+     * @param s: Path del archivo especificado por el usuario.
      */
     public FileDictionary(String s) {
         this.loadPath = s;
@@ -39,21 +38,20 @@ public class FileDictionary extends Dictionary {
      /** Metodos */
 
     /**
-     * NAME : Metodo load
-     *
-     * DESCRIPTION : Carga un diccionario desde un archivo.
-     * @param file    Nombre del archivo diccionario.
-     * @return void
+     * Metodo load: Carga un diccionario desde un archivo.
+     * @param file: Nombre del archivo diccionario.
      */
     public void load(String file) {
         try {
+            int i;    // Indice.
+            boolean flag;    // Bandera de error.
             File f = new File(file);
             FileReader fr = new FileReader(f);
-            // Leo el primer caracter y lo almaceno como un int.
+            // Lee el primer caracter y lo almacena como un int.
             int c = fr.read();
             String str;
             StringBuilder sb = new StringBuilder();
-            // Recorro el archivo hasta encontrar el -1 que marca el final de
+            // Recorre el archivo hasta encontrar el -1 que marca el final de
             // un archivo.
             while (c != -1) {
                 if (c != '\n' && c != '\r') {
@@ -61,34 +59,46 @@ public class FileDictionary extends Dictionary {
                 }
                 if (c == '\n') {
                     str = sb.toString();
+                    i = 0;
+                    flag = false;
+                    if (str.length() < 30) {    // Tamaño maximo de palabra.
+                        while (i < str.length()) {
+                            if (!Character.isLetter(str.charAt(i))) {    // Verifica que sean caracteres alfabeticos.
+                                flag = true;    // Palabra no valida.
+                                break;
+                            }
+                            i++;
+                        }
+                    } else { flag = true; }    // Palabra no valida.
+                    if (flag) {
+                        System.out.println("Error: El diccionario no es valido.");
+                        System.exit(1);    // Salida forzosa del programa por ingresar un diccionario no valido.
+                    }
                     Word w = new Word(str);
                     this.add(w);
-                    // Limpio el stringBuilder sb.
+                    // Limpia el stringBuilder sb.
                     sb.delete(0, str.length());
                 }
                 c = fr.read();
             }
-            // Cierro el archivo.
+            // Cierra el archivo.
             fr.close();
         }
         catch (Exception e) {
-            System.out.println("Error:" + e.getMessage());
+            System.out.println("Cargando diccionario por defecto: " + this.loadPath);    // No se le pasa como argumento un diccionario.
         }
     }
 
     /**
-     * NAME : Metodo save
-     *
-     * DESCRIPTION : Guarda el diccionario a un archivo por defecto llamado
+     * Metodo save: Guarda el diccionario a un archivo por defecto llamado
      *               dict.txt.
      * @param void
-     * @return void
-     * @throws FileNotFoundException    Levanta una exception si no pudo abrir
-     *                                  el archivo.
+     * @throws FileNotFoundException: Levanta una exception si no pudo abrir
+     *                                el archivo.
      */
     public void save() {
         if (this.loadPath == "") {
-            save(this.loadPath + "dict.txt"); // Si es le path completo al archivo
+            save(this.loadPath + "dict.txt"); // Si es el path completa al archivo.
         }
         else {
             save(this.loadPath);
@@ -96,13 +106,10 @@ public class FileDictionary extends Dictionary {
     }
 
     /**
-     * NAME : Metodo save
-     *
-     * DESCRIPTION : Guarda un diccionario a un archivo especifico.
-     * @param fileName    Nombre de archivo con el que se guardara el diccionario.
-     * @return void
-     * @throws FileNotFoundException    Levanta una exception si no encuentra el
-     *                                  archivo.
+     * Metodo save: Guarda un diccionario a un archivo especifico.
+     * @param fileName: Nombre de archivo con el que se guardara el diccionario.
+     * @throws FileNotFoundException: Levanta una exception si no encuentra el
+     *                                archivo.
      */
     public void save(String fileName) {
         try {
@@ -118,7 +125,7 @@ public class FileDictionary extends Dictionary {
         }
         catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
-            System.exit(1);
+            System.exit(1);    // Salida forzosa del programa.
         }
     }
 }
