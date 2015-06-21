@@ -157,7 +157,7 @@ void process_document(char *fname) {
 int main(int argc, char **argv) {
     char *dict;
     /* Verificamos el nro de argumentos. */
-    if (argc <= 2) {
+    if (argc < 2) {
         printf("spellchecker.c: nro de argumentos erroneo. Deben ser <documento> [<diccionario>].\n");
         return (1);
     }
@@ -166,9 +166,9 @@ int main(int argc, char **argv) {
     dict = (argc >=3) ? argv[2] : "dict.txt";
 /* completar aca */
     main_dict = dict_new();    // Se crea un diccionario principal.
-    dict_load(main_dict, argv[2], MAX_WORD_SIZE);    // Se carga el diccionario principal.
+    dict_load(main_dict, dict, MAX_WORD_SIZE);    // Se carga el diccionario principal.
     process_document(argv[1]);    // Se procesa el documento.
-    dict_save(main_dict, argv[2]);    // Se guarda el diccionario principal.
+    dict_save(main_dict, dict);    // Se guarda el diccionario principal.
     main_dict = dict_destroy(main_dict);    // Se destruye el diccionario principal.
     printf("El documento %s ha sido procesado. Resultados en out.txt\n", argv[1]);
 }

@@ -59,7 +59,7 @@ void dict_load (Dictionary dic, char *fname, int max_word) {
         i = 0,    // Indice de arreglo de diccionario principal.
         j = 0;    // Indice de lectura de caracteres de palabras.
     char word[max_word];    // Palabra leida del diccionario principal.
-    FILE *ficher = fopen(fname,"r");    // Abrir archivo de diccionario principal.
+    FILE *ficher = fopen(fname,"rw");    // Abrir archivo de diccionario principal.
     if (ficher != NULL) {
         dic->size = 10;    // Tamaño inicial del diccionario principal.
         dic->dict = (char **)calloc(dic->size, sizeof(char *));
@@ -120,10 +120,10 @@ void dict_load (Dictionary dic, char *fname, int max_word) {
             printf("Error al cerrar el archivo.\n");
             exit(1);   // Salida forzosa del programa.
         }
-    } else {
+    } /*else {    // Si el parametro diccionario.txt es obligatorio.
         printf("Error al abrir el archivo.\n");
         exit(1);   // Salida forzosa del programa.
-    }
+    }*/
 }
 
 /*******************************************************************

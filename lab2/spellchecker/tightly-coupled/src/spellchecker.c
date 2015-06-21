@@ -49,7 +49,7 @@ void dict_load(char *fname) {
         i = 0,    // Indice de arreglo de diccionario principal.
         j = 0;    // Indice de lectura de caracteres de palabras.
     char word[MAX_WORD_SIZE];    // Palabra leida del diccionario principal.
-    FILE *ficher = fopen(fname,"r");    // Abrir archivo de diccionario principal.
+    FILE *ficher = fopen(fname,"rw");    // Abrir archivo de diccionario principal.
     if (ficher != NULL) {
         dict_main = (char **)calloc(main_size, sizeof(char *));
         if (dict_main != NULL) {
@@ -108,9 +108,13 @@ void dict_load(char *fname) {
             exit(1);   // Salida forzosa del programa.
         }
     } else {
+        main_size = 0;
+    }
+    // Si el parametro diccionario.txt es obligatorio.
+    /*else {
         printf("Error al abrir el archivo.\n");
         exit(1);   // Salida forzosa del programa.
-    }
+    }*/
 }
 
 /*******************************************************************
@@ -470,7 +474,7 @@ void process_document(char *fname) {
 int main(int argc, char **argv) {
     char *dict;
     /* Verificamos el nro de argumentos. */
-    if (argc <= 2) {
+    if (argc < 2) {
         printf("spellchecker.c: nro de argumentos erroneo. Deben ser <documento> [<diccionario>].\n");
         return (1);
     }
@@ -478,8 +482,8 @@ int main(int argc, char **argv) {
     /* caso contrario usamos el diccionario por defecto */
     dict = (argc >=3) ? argv[2] : "dict.txt";
 /* completar aca */
-    dict_load(argv[2]);    // Se carga el diccionario principal.
+    dict_load(dict);    // Se carga el diccionario principal.
     process_document(argv[1]);    // Se procesa el documento.
-    dict_save(argv[2]);    // Se guarda el diccionario principal.
+    dict_save(dict);    // Se guarda el diccionario principal.
     printf("El documento %s ha sido procesado. Resultados en out.txt\n", argv[1]);
 }
