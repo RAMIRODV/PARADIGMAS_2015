@@ -1,15 +1,15 @@
 object Main extends App {
-    var y = 3;
-    lazy val x = { System.nanoTime }
+    var y = {println("vale y"); 3}
+    lazy val x = {println("vale x"); 2}
     println("call-by-name")
-    mostrar(prod(y))
-    println("call-by-value usando lazy")
-    mostrar(x)
+    name(y)
+    println("call-by-value")
+    value(x)
     println("Vuelvo a llamar a ambos")
-    mostrar(prod(y))
-    mostrar(x)
+    name(y)
+    value(x)
     
-    def prod(a: =>Int) = { System.nanoTime }
+    def value(a: Int) = { println("by value: " + a) }
     
-    def mostrar(t: =>Long) = { println("Parametro: " + t) }
+    def name(t: =>Int) = { println("by name: " + t) }
 }
