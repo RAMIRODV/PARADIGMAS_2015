@@ -37,7 +37,7 @@ dict_load fname =
     let
         file2String :: FilePath -> IO String    -- Extrae las palabras del archivo.
         file2String filename = do
-                handle <- openFile filename ReadMode
+                handle <- openFile filename ReadWriteMode
                 hGetContents handle
 
         alpha_char :: [String] -> Bool    -- La palabra posse caracteres especiales.
